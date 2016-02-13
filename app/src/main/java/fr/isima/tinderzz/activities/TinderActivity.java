@@ -65,7 +65,7 @@ public abstract class TinderActivity extends AppCompatActivity {
                 mCardsDataAdapter.addAll(gson.fromJson(response, Results.class).getResults());
                 DataManager.getInstance().setResults(gson.fromJson(response, Results.class));
 
-                updateView(DataManager.getInstance().next().getUser());
+                updateView(DataManager.getInstance().getResult().getUser());
             }
         },
         new Response.ErrorListener() {

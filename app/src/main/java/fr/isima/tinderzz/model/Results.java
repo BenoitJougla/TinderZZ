@@ -13,7 +13,7 @@ public class Results {
 
     public Results() {
         results = new ArrayList<>();
-        currentIndex = -1;
+        currentIndex = 0;
     }
 
     public boolean hasNext() {

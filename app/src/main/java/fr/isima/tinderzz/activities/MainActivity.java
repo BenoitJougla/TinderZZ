@@ -30,7 +30,7 @@ public class MainActivity extends TinderActivity {
     protected void onRestart() {
         super.onRestart();
 
-        nbElementsToSynchronized = DataManager.getInstance().getCurrentIndex() - mCardStack.getCurrIndex();
+       nbElementsToSynchronized = DataManager.getInstance().getCurrentIndex() - mCardStack.getCurrIndex();
         Log.d(TAG, "onRestart position : " + nbElementsToSynchronized);
 
         for(int i = 0; i < nbElementsToSynchronized; ++i) {
@@ -72,6 +72,7 @@ public class MainActivity extends TinderActivity {
 
         Log.d(TAG, "onCreate");
 
+        nbElementsToSynchronized = 1;
         newRequest();
 
         final Button button = (Button) findViewById(R.id.nopeButton);
@@ -81,22 +82,10 @@ public class MainActivity extends TinderActivity {
         likeButton.setOnClickListener(new MainActivityListener(mCardStack, 3));
 
         mCardStack.setListener(new CardEventsListener(this));
-
-       /* imageView.setOnClickListener(
-                new View.DetailActivityListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this , DetailActivity.class);
-                        startActivity(i);
-                    }
-                }
-        );*/
     }
 
     public void updateView(User user) {
-
-        if(nbElementsToSynchronized > 0)
-            --nbElementsToSynchronized;
+        Log.d(TAG, "updateView currentIndex = " + mCardStack.getCurrIndex() + " " + DataManager.getInstance().getCurrentIndex());
 
         if(nbElementsToSynchronized == 0) {
             if(DataManager.getInstance().hasNext()) {
@@ -106,7 +95,7 @@ public class MainActivity extends TinderActivity {
             }
         }
 
-        /*descriptionText.setText(user.toString());
-        Picasso.with(MainActivity.this).load(user.picture.large).into(imageView);*/
+        if(nbElementsToSynchronized > 0)
+            --nbElementsToSynchronized;
     }
 }
