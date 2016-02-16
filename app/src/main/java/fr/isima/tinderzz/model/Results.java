@@ -29,7 +29,7 @@ public class Results {
         return results.get(currentIndex);
     }
 
-    public List<Result> getResults() {
+    public List<Result> getList() {
         return results;
     }
 

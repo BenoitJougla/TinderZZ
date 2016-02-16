@@ -53,7 +53,11 @@ public class CardEventsListener implements CardStack.CardEventListener {
     @Override
     public void discarded(int id, int direction) {
         //this callback invoked when dismiss animation is finished.
-        activity.updateView(null);
+        if(DataManager.getInstance().hasNext()) {
+            DataManager.getInstance().next();
+        } else {
+            activity.newRequest();
+        }
         Log.d(TAG, "Discarded id : " + id + " direction : " + direction);
     }
 

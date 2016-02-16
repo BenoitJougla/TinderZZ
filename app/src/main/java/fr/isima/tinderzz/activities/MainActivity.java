@@ -8,17 +8,21 @@ import android.widget.Button;
 
 import com.wenchao.cardstack.CardStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.isima.tinderzz.R;
 import fr.isima.tinderzz.listener.CardEventsListener;
 import fr.isima.tinderzz.listener.MainActivityListener;
 import fr.isima.tinderzz.model.DataManager;
+import fr.isima.tinderzz.model.Result;
+import fr.isima.tinderzz.model.Results;
 import fr.isima.tinderzz.model.User;
 
 public class MainActivity extends TinderActivity {
 
-    CardStack mCardStack;
     String TAG = "MainActivity";
-    int nbElementsToSynchronized = 0;
+    CardStack mCardStack;
 
     @Override
     protected void onDestroy() {
@@ -30,12 +34,16 @@ public class MainActivity extends TinderActivity {
     protected void onRestart() {
         super.onRestart();
 
-       nbElementsToSynchronized = DataManager.getInstance().getCurrentIndex() - mCardStack.getCurrIndex();
-        Log.d(TAG, "onRestart position : " + nbElementsToSynchronized);
+        mCardStack.reset(true);
+        mCardsDataAdapter.clear();
 
-        for(int i = 0; i < nbElementsToSynchronized; ++i) {
-            mCardStack.discardTop(0);
+        List<Result> list = DataManager.getInstance().getResults().getList();
+
+        for(int i = DataManager.getInstance().getCurrentIndex(); i < list.size() ; ++i) {
+            mCardsDataAdapter.add(list.get(i));
         }
+
+        Log.d(TAG, "On restart");
     }
 
     @Override
@@ -72,7 +80,6 @@ public class MainActivity extends TinderActivity {
 
         Log.d(TAG, "onCreate");
 
-        nbElementsToSynchronized = 1;
         newRequest();
 
         final Button button = (Button) findViewById(R.id.nopeButton);
@@ -85,17 +92,10 @@ public class MainActivity extends TinderActivity {
     }
 
     public void updateView(User user) {
-        Log.d(TAG, "updateView currentIndex = " + mCardStack.getCurrIndex() + " " + DataManager.getInstance().getCurrentIndex());
+    }
 
-        if(nbElementsToSynchronized == 0) {
-            if(DataManager.getInstance().hasNext()) {
-                DataManager.getInstance().next();
-            } else {
-                newRequest();
-            }
-        }
-
-        if(nbElementsToSynchronized > 0)
-            --nbElementsToSynchronized;
+    @Override
+    public void refresh() {
+        mCardStack.reset(true);
     }
 }

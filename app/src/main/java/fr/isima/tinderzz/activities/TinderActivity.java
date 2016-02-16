@@ -3,6 +3,10 @@ package fr.isima.tinderzz.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -18,6 +22,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import fr.isima.tinderzz.R;
 import fr.isima.tinderzz.model.CardsDataAdapter;
 import fr.isima.tinderzz.model.DataManager;
 import fr.isima.tinderzz.model.Result;
@@ -34,6 +39,7 @@ public abstract class TinderActivity extends AppCompatActivity {
     CardsDataAdapter mCardsDataAdapter;
 
     public abstract void updateView(User user);
+    public abstract void refresh();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,29 @@ public abstract class TinderActivity extends AppCompatActivity {
         mCardsDataAdapter = new CardsDataAdapter(this,0, new ArrayList<Result>());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_refresh:
+                mCardsDataAdapter.clear();
+                newRequest();
+                refresh();
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+
     public void newRequest() {
         // Formulate the request and handle the response.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -62,8 +91,11 @@ public abstract class TinderActivity extends AppCompatActivity {
                 Log.d(TAG, response);
 
                 Gson gson = new Gson();
-                mCardsDataAdapter.addAll(gson.fromJson(response, Results.class).getResults());
-                DataManager.getInstance().setResults(gson.fromJson(response, Results.class));
+
+                Results results = gson.fromJson(response, Results.class);
+
+                mCardsDataAdapter.addAll(results.getList());
+                DataManager.getInstance().setResults(results);
 
                 updateView(DataManager.getInstance().getResult().getUser());
             }

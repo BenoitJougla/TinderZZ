@@ -47,6 +47,8 @@ public class DetailActivity extends TinderActivity {
     }
 
     public void updateView(User user) {
+        Log.d(TAG, "Index : " + DataManager.getInstance().getCurrentIndex());
+
         nameLabel.setText(user.toString());
         ageLabel.setText(String.valueOf(user.getAge()));
         emailLabel.setText(user.getEmail());
@@ -56,5 +58,10 @@ public class DetailActivity extends TinderActivity {
         StringBuilder sb = new StringBuilder();
         sb.append(user.getName());
         setTitle(sb);
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

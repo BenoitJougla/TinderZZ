@@ -1,11 +1,13 @@
 package fr.isima.tinderzz.model;
 
+import com.wenchao.cardstack.CardStack;
+
 /**
  * Created by bejougla1 on 03/02/2016.
  */
 public class DataManager {
-    private Results results;
     private static DataManager _INSTANCE = null;
+    private Results results;
 
     private DataManager() {
         results = new Results();
@@ -26,6 +28,8 @@ public class DataManager {
     public void setResults(Results results) {
         this.results = results;
     }
+
+    public Results getResults() { return results; }
 
     public Result next() {
         return results.next();
